@@ -8,6 +8,9 @@ import com.example.ecommerceplatform.repository.IProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 @Service
 @Transactional
 public class CartService implements ICartService {
@@ -39,5 +42,19 @@ public class CartService implements ICartService {
 
         cartItemRepository.save(cartItem);
     }
-}
 
+    @Override
+    public List<CartItem> getCartItems(User user) {
+        return cartItemRepository.findAll()
+                .stream()
+                .filter(ci -> ci.getUser().getId().equals(user.getId()))
+                .toList();
+    }
+
+    @Override
+    public BigDecimal calculateTotalAmount(List<CartItem> cartItems) {
+        return cartItems.stream()
+                .map(CartItem::getTotalPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+}

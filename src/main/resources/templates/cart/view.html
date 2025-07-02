@@ -28,7 +28,6 @@
                 <th>Giá</th>
                 <th>Số lượng</th>
                 <th>Tổng</th>
-                <th>Hành động</th>
             </tr>
             </thead>
             <tbody>
@@ -40,12 +39,6 @@
                 <td th:text="${#numbers.formatDecimal(item.product.price,1,'POINT',0,'COMMA')} + ' đ'"></td>
                 <td th:text="${item.quantity}"></td>
                 <td th:text="${#numbers.formatDecimal(item.totalPrice,1,'POINT',0,'COMMA')} + ' đ'"></td>
-                <td>
-                    <form th:action="@{/cart/remove}" method="post" class="d-inline">
-                        <input type="hidden" name="cartItemId" th:value="${item.id}"/>
-                        <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
-                    </form>
-                </td>
             </tr>
             </tbody>
         </table>
