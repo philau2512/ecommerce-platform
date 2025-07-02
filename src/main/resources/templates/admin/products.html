@@ -1,10 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Quản lý sản phẩm</title>
 </head>
 <body>
+<div th:insert="base :: site-header"></div>
 
+<main class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Quản lý sản phẩm</h2>
+        <a class="btn btn-success" th:href="@{/admin/products/create}">+ Thêm sản phẩm</a>
+    </div>
+
+    <table class="table table-bordered table-hover">
+        <thead class="table-light">
+        <tr>
+            <th>ID</th>
+            <th>Ảnh</th>
+            <th>Tên</th>
+            <th>Giá</th>
+            <th>Danh mục</th>
+            <th>Hành động</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${products}">
+            <td th:text="${product.id}">1</td>
+            <td><img th:src="@{'/images/' + ${product.image}}" width="60"/></td>
+            <td th:text="${product.name}">Tên sản phẩm</td>
+            <td th:text="${product.price} + ' VNĐ'">Giá</td>
+            <td th:text="${product.category.name}">Danh mục</td>
+            <td>
+                <a th:href="@{'/admin/products/edit/' + ${product.id}}" class="btn btn-sm btn-primary">Sửa</a>
+                <a th:href="@{'/admin/products/delete/' + ${product.id}}" class="btn btn-sm btn-danger"
+                   onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Xóa</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+
+<div th:insert="base :: site-footer"></div>
 </body>
 </html>
