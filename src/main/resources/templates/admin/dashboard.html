@@ -1,10 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Thống kê doanh thu</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+<div th:insert="base :: site-header"></div>
 
+<main class="container mt-4">
+    <h2 class="mb-4">Báo cáo doanh thu</h2>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Tổng doanh thu</h5>
+                    <p class="card-text fs-4 fw-bold" th:text="${totalRevenue} + ' VNĐ'">0 VNĐ</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-white bg-info mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Tổng đơn hàng</h5>
+                    <p class="card-text fs-4 fw-bold" th:text="${totalOrders}">0</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h4>Biểu đồ doanh thu theo tháng</h4>
+    <canvas id="revenueChart" height="100"></canvas>
+</main>
+
+<script th:inline="javascript">
+    let revenueData = [[${revenueByMonth}]]; // Ví dụ: [1200000, 950000, 1500000,...]
+    new Chart(document.getElementById('revenueChart'), {
+        type: 'line',
+        data: {
+            labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5'],
+            datasets: [{
+                label: 'Doanh thu (VNĐ)',
+                data: revenueData,
+                fill: true,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+            }]
+        }
+    });
+</script>
+
+<div th:insert="base :: site-footer"></div>
 </body>
 </html>
