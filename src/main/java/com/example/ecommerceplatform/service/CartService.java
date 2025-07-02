@@ -57,4 +57,30 @@ public class CartService implements ICartService {
                 .map(CartItem::getTotalPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
+
+    @Override
+    public void removeCartItem(User user, Long cartItemId) {
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy sản phẩm trong giỏ"));
+
+        if (!cartItem.getUser().getId().equals(user.getId())) {
+            throw new IllegalStateException("Bạn không có quyền xóa sản phẩm này");
+        }
+
+        cartItemRepository.delete(cartItem);
+    }
+
+    @Override
+    public void updateCartItemQuantity(User user, Long cartItemId, int quantity) {
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy sản phẩm trong giỏ"));
+
+        if (!cartItem.getUser().getId().equals(user.getId())) {
+            throw new IllegalStateException("Bạn không có quyền chỉnh sửa sản phẩm này");
+        }
+
+        cartItem.setQuantity(quantity);
+        cartItemRepository.save(cartItem);
+    }
+
 }

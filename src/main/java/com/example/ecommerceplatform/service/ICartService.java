@@ -11,5 +11,9 @@ public interface ICartService {
 
     List<CartItem> getCartItems(User user);
 
+    void removeCartItem(User user, Long cartItemId);
+
+    void updateCartItemQuantity(User user, Long cartItemId, int quantity);
+
     BigDecimal calculateTotalAmount(List<CartItem> cartItems);
 }
