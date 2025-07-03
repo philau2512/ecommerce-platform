@@ -40,4 +40,9 @@ public class OrderService implements IOrderService {
     public List<Order> findByUserId(Long userId) {
         return orderRepository.findByUserId(userId);
     }
+
+    @Override
+    public List<Order> findRecentOrders(int limit) {
+        return orderRepository.findTop5ByOrderByOrderDateDesc();
+    }
 }

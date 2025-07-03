@@ -12,6 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -33,10 +35,28 @@ public class AdminController {
 
     // Dashboard - Trang chủ admin
     @GetMapping("/dashboard")
-    public String dashboard(Model model) {
+    public String dashboard(@RequestParam(required = false) Integer year, Model model) {
+        // Nếu không có năm được chọn, mặc định lấy năm hiện tại
+        int selectedYear = (year != null) ? year : LocalDate.now().getYear();
+
         // Lấy thống kê doanh thu, số lượng đơn hàng
-        Map<String, Object> stats = adminService.getDashboardStats();
+        Map<String, Object> stats = adminService.getDashboardStats(selectedYear);
+
+        // Lấy danh sách đơn hàng gần đây (5 đơn gần nhất)
+        List<Order> recentOrders = orderService.findRecentOrders(5);
+
         model.addAttribute("stats", stats);
+        model.addAttribute("recentOrders", recentOrders);
+        model.addAttribute("selectedYear", selectedYear);
+
+        // Tạo danh sách các năm để hiển thị trong dropdown
+        int currentYear = LocalDate.now().getYear();
+        List<Integer> years = new ArrayList<>();
+        for (int i = currentYear; i >= currentYear - 5; i--) {
+            years.add(i);
+        }
+        model.addAttribute("years", years);
+
         return "admin/dashboard";
     }
 
@@ -45,6 +65,7 @@ public class AdminController {
     public String listProducts(Model model) {
         List<Product> products = productService.findAll();
         model.addAttribute("products", products);
+        model.addAttribute("categories", adminService.getAllCategories());
         return "admin/products";
     }
 
@@ -57,6 +78,7 @@ public class AdminController {
 
     @PostMapping("/products/add")
     public String addProduct(@ModelAttribute Product product) {
+        product.setId(null);
         productService.save(product);
         return "redirect:/admin/products";
     }
@@ -71,7 +93,15 @@ public class AdminController {
 
     @PostMapping("/products/edit/{id}")
     public String updateProduct(@PathVariable Long id, @ModelAttribute Product product) {
-        product.setId(id);
+        Product existingProduct = productService.findById(id);
+
+        // Cập nhật các trường từ form
+        existingProduct.setName(product.getName());
+        existingProduct.setDescription(product.getDescription());
+        existingProduct.setPrice(product.getPrice());
+        existingProduct.setQuantity(product.getQuantity());
+        existingProduct.setCategory(product.getCategory());
+
         productService.save(product);
         return "redirect:/admin/products";
     }

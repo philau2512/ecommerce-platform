@@ -10,4 +10,6 @@ public interface IOrderService {
     Order save(Order order);
     void updateStatus(Long id, String status);
     List<Order> findByUserId(Long userId);
+    // Phương thức mới để lấy đơn hàng gần đây
+    List<Order> findRecentOrders(int limit);
 }

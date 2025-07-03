@@ -56,6 +56,15 @@
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h1 class="h2">Dashboard</h1>
                 <div class="btn-toolbar mb-2 mb-md-0">
+                    <div class="me-2">
+                        <form th:action="@{/admin/dashboard}" method="get" class="d-flex">
+                            <label for="yearSelect" class="me-2 my-auto">Chọn năm:</label>
+                            <select id="yearSelect" name="year" class="form-select form-select-sm" onchange="this.form.submit()">
+                                <option th:each="year : ${years}" th:value="${year}" th:text="${year}" 
+                                        th:selected="${year == selectedYear}"></option>
+                            </select>
+                        </form>
+                    </div>
                     <div class="btn-group me-2">
                         <button type="button" class="btn btn-sm btn-outline-secondary">Xuất báo cáo</button>
                     </div>
@@ -154,6 +163,9 @@
                             </tr>
                             </thead>
                             <tbody>
+                            <tr th:if="${#lists.isEmpty(recentOrders)}">
+                                <td colspan="6" class="text-center">Không có đơn hàng nào</td>
+                            </tr>
                             <tr th:each="order : ${recentOrders}">
                                 <td th:text="${order.id}">1</td>
                                 <td th:text="${order.user.fullName}">Nguyễn Văn A</td>
@@ -190,22 +202,34 @@
 <script th:inline="javascript">
     // Lấy dữ liệu doanh thu từ server
     const revenueData = /*[[${stats.revenueByMonth}]]*/ {};
-
-    // Chuẩn bị dữ liệu cho biểu đồ
-    const months = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'];
-    const revenues = [];
-
-    // Chuyển đổi dữ liệu từ JSON sang mảng
-    for (const month of months) {
-        revenues.push(revenueData[month] || 0);
-    }
-
+    
+    // Định nghĩa tên tháng bằng tiếng Việt
+    const monthMapping = {
+        'JANUARY': 'Tháng 1', 
+        'FEBRUARY': 'Tháng 2', 
+        'MARCH': 'Tháng 3', 
+        'APRIL': 'Tháng 4', 
+        'MAY': 'Tháng 5', 
+        'JUNE': 'Tháng 6',
+        'JULY': 'Tháng 7', 
+        'AUGUST': 'Tháng 8', 
+        'SEPTEMBER': 'Tháng 9', 
+        'OCTOBER': 'Tháng 10', 
+        'NOVEMBER': 'Tháng 11', 
+        'DECEMBER': 'Tháng 12'
+    };
+    
+    // Sắp xếp tháng theo thứ tự
+    const orderedMonths = Object.keys(monthMapping);
+    const vietnameseMonths = orderedMonths.map(month => monthMapping[month]);
+    const revenues = orderedMonths.map(month => revenueData[month] || 0);
+    
     // Vẽ biểu đồ
     const ctx = document.getElementById('revenueChart');
     new Chart(ctx, {
         type: 'line',
         data: {
-            labels: months,
+            labels: vietnameseMonths,
             datasets: [{
                 label: 'Doanh thu (VNĐ)',
                 data: revenues,
@@ -223,7 +247,7 @@
                 },
                 tooltip: {
                     callbacks: {
-                        label: function (context) {
+                        label: function(context) {
                             return context.raw.toLocaleString('vi-VN') + ' VNĐ';
                         }
                     }
@@ -233,7 +257,7 @@
                 y: {
                     beginAtZero: true,
                     ticks: {
-                        callback: function (value) {
+                        callback: function(value) {
                             return value.toLocaleString('vi-VN') + ' VNĐ';
                         }
                     }
