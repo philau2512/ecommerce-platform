@@ -10,7 +10,32 @@
 <div th:insert="base :: site-header"></div>
 
 <main class="container mt-4">
-    <h2>Products</h2>
+    <div class="row mb-4">
+        <div class="col-md-6 mx-auto">
+            <form th:action="@{/}" method="get" class="d-flex">
+                <input type="text" name="search" class="form-control me-2" placeholder="Tìm kiếm sản phẩm..." th:value="${searchKeyword}" autocomplete="off">
+                <button class="btn btn-primary" type="submit">
+                    <i class="fas fa-search"></i> Tìm kiếm
+                </button>
+            </form>
+        </div>
+    </div>
+    <div th:if="${searchKeyword != null}" class="row mb-3">
+        <div class="col-12">
+            <div class="alert alert-info d-flex justify-content-between align-items-center">
+                <span>
+                    <i class="fas fa-search me-2"></i>
+                    Kết quả tìm kiếm cho: <strong th:text="${searchKeyword}"></strong>
+                    (<span th:text="${products.totalElements}">0</span> sản phẩm)
+                </span>
+                <a th:href="@{/}" class="btn btn-sm btn-outline-secondary">
+                    <i class="fas fa-times"></i> Xóa bộ lọc
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <h2 th:text="${searchKeyword != null ? 'Kết quả tìm kiếm' : 'Sản phẩm'}">Products</h2>
     <div class="row">
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4" th:each="product : ${products}">
             <div class="card h-100">
