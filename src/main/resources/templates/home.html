@@ -11,11 +11,9 @@
 
 <main class="container mt-4">
     <h2>Products</h2>
-    <!-- Product Grid Container -->
     <div class="row">
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4" th:each="product : ${products}">
             <div class="card h-100">
-                <!-- Product Image -->
                 <img th:src="${product.imageUrl != null ? product.imageUrl : 'https://via.placeholder.com/300x200'}"
                      class="card-img-top"
                      th:alt="${product.name}"
