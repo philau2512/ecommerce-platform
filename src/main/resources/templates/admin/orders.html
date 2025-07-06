@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>Quản lý đơn hàng</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"/>
 </head>
+
 <body>
 <div th:insert="base :: site-header"></div>
 
@@ -52,7 +54,8 @@
 
         <!-- Main Content -->
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <div
+                    class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h1 class="h2">Quản lý đơn hàng</h1>
             </div>
 
@@ -64,29 +67,19 @@
                             <label for="statusFilter" class="form-label">Trạng thái</label>
                             <select class="form-select" id="statusFilter" name="status">
                                 <option value="">Tất cả</option>
-                                <option value="PENDING"
-                                        th:selected="${param.status != null && param.status[0] == 'PENDING'}">Đang xử lý
-                                </option>
-                                <option value="SHIPPED"
-                                        th:selected="${param.status != null && param.status[0] == 'SHIPPED'}">Đang giao
-                                </option>
-                                <option value="DELIVERED"
-                                        th:selected="${param.status != null && param.status[0] == 'DELIVERED'}">Đã giao
-                                </option>
-                                <option value="CANCELLED"
-                                        th:selected="${param.status != null && param.status[0] == 'CANCELLED'}">Đã hủy
-                                </option>
+                                <option value="PENDING" th:selected="${status == 'PENDING'}">Đang xử lý</option>
+                                <option value="SHIPPED" th:selected="${status == 'SHIPPED'}">Đang giao</option>
+                                <option value="DELIVERED" th:selected="${status == 'DELIVERED'}">Đã giao</option>
+                                <option value="CANCELLED" th:selected="${status == 'CANCELLED'}">Đã hủy</option>
                             </select>
                         </div>
                         <div class="col-md-3">
                             <label for="fromDate" class="form-label">Từ ngày</label>
-                            <input type="date" class="form-control" id="fromDate" name="fromDate"
-                                   th:value="${param.fromDate}">
+                            <input type="date" class="form-control" id="fromDate" name="fromDate" th:value="${fromDate}">
                         </div>
                         <div class="col-md-3">
                             <label for="toDate" class="form-label">Đến ngày</label>
-                            <input type="date" class="form-control" id="toDate" name="toDate"
-                                   th:value="${param.toDate}">
+                            <input type="date" class="form-control" id="toDate" name="toDate" th:value="${toDate}">
                         </div>
                         <div class="col-md-3 d-flex align-items-end">
                             <button type="submit" class="btn btn-primary me-2">
@@ -120,32 +113,44 @@
                                 <td th:text="${order.id}">1</td>
                                 <td>
                                     <div th:text="${order.user.fullName}">Nguyễn Văn A</div>
-                                    <div class="small text-muted" th:text="${order.user.email}">email@example.com</div>
+                                    <div class="small text-muted" th:text="${order.user.email}">
+                                        email@example.com
+                                    </div>
                                 </td>
-                                <td th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm')}">01/05/2023
-                                    15:30
+                                <td th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm')}"
+                                >
+                                    01/05/2023 15:30
                                 </td>
-                                <td th:text="${#numbers.formatDecimal(order.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">
+                                <td
+                                        th:text="${#numbers.formatDecimal(order.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"
+                                >
                                     500,000 VNĐ
                                 </td>
                                 <td>
-                                        <span th:class="${'badge ' +
+                        <span
+                                th:class="${'badge ' +
                                             (order.status == 'PENDING' ? 'bg-warning' :
                                             (order.status == 'SHIPPED' ? 'bg-info' :
                                             (order.status == 'DELIVERED' ? 'bg-success' : 'bg-danger')))}"
-                                              th:text="${order.status == 'PENDING' ? 'Đang xử lý' :
+                                th:text="${order.status == 'PENDING' ? 'Đang xử lý' :
                                             (order.status == 'SHIPPED' ? 'Đang giao' :
-                                            (order.status == 'DELIVERED' ? 'Đã giao' : 'Đã hủy'))}">
-                                        </span>
+                                            (order.status == 'DELIVERED' ? 'Đã giao' : 'Đã hủy'))}"
+                        >
+                        </span>
                                 </td>
                                 <td>
-                                    <a th:href="@{'/admin/orders/' + ${order.id}}" class="btn btn-sm btn-info">
+                                    <a
+                                            th:href="@{'/admin/orders/' + ${order.id}}"
+                                            class="btn btn-sm btn-info"
+                                    >
                                         <i class="bi bi-eye"></i> Chi tiết
                                     </a>
                                 </td>
                             </tr>
                             <tr th:if="${#lists.isEmpty(orders)}">
-                                <td colspan="6" class="text-center py-3">Không có đơn hàng nào</td>
+                                <td colspan="6" class="text-center py-3">
+                                    Không có đơn hàng nào
+                                </td>
                             </tr>
                             </tbody>
                         </table>
@@ -155,24 +160,37 @@
                     <div th:if="${totalPages > 1}" class="mt-4">
                         <nav aria-label="Page navigation">
                             <ul class="pagination justify-content-center">
-                                <li class="page-item" th:classappend="${currentPage == 0 ? 'disabled' : ''}">
-                                    <a class="page-link"
-                                       th:href="@{/admin/orders(page=${currentPage - 1}, status=${param.status}, fromDate=${param.fromDate}, toDate=${param.toDate})}"
-                                       aria-label="Previous">
+                                <li
+                                        class="page-item"
+                                        th:classappend="${currentPage == 0 ? 'disabled' : ''}"
+                                >
+                                    <a
+                                            class="page-link"
+                                            th:href="@{/admin/orders(page=${currentPage - 1}, status=${param.status}, fromDate=${param.fromDate}, toDate=${param.toDate})}"
+                                            aria-label="Previous"
+                                    >
                                         <span aria-hidden="true">&laquo;</span>
                                     </a>
                                 </li>
-                                <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
-                                    th:class="${currentPage == i ? 'page-item active' : 'page-item'}">
-                                    <a class="page-link"
-                                       th:href="@{/admin/orders(page=${i}, status=${param.status}, fromDate=${param.fromDate}, toDate=${param.toDate})}"
-                                       th:text="${i + 1}"></a>
+                                <li
+                                        th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                                        th:class="${currentPage == i ? 'page-item active' : 'page-item'}"
+                                >
+                                    <a
+                                            class="page-link"
+                                            th:href="@{/admin/orders(page=${i}, status=${param.status}, fromDate=${param.fromDate}, toDate=${param.toDate})}"
+                                            th:text="${i + 1}"
+                                    ></a>
                                 </li>
-                                <li class="page-item"
-                                    th:classappend="${currentPage == totalPages - 1 ? 'disabled' : ''}">
-                                    <a class="page-link"
-                                       th:href="@{/admin/orders(page=${currentPage + 1}, status=${param.status}, fromDate=${param.fromDate}, toDate=${param.toDate})}"
-                                       aria-label="Next">
+                                <li
+                                        class="page-item"
+                                        th:classappend="${currentPage == totalPages - 1 ? 'disabled' : ''}"
+                                >
+                                    <a
+                                            class="page-link"
+                                            th:href="@{/admin/orders(page=${currentPage + 1}, status=${param.status}, fromDate=${param.fromDate}, toDate=${param.toDate})}"
+                                            aria-label="Next"
+                                    >
                                         <span aria-hidden="true">&raquo;</span>
                                     </a>
                                 </li>

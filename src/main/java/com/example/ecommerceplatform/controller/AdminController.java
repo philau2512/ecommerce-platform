@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -176,9 +177,41 @@ public class AdminController {
 
     // QUẢN LÝ ĐƠN HÀNG
     @GetMapping("/orders")
-    public String listOrders(Model model) {
-        List<Order> orders = orderService.findAll();
-        model.addAttribute("orders", orders);
+    public String listOrders(@RequestParam(required = false) String status,
+                             @RequestParam(required = false) LocalDate fromDate,
+                             @RequestParam(required = false) LocalDate toDate,
+                             @RequestParam(defaultValue = "0") int page,
+                             @RequestParam(defaultValue = "5") int size,
+                             Model model) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Order> orders;
+
+        // Convert LocalDate to LocalDateTime for the service call
+        LocalDateTime fromDateTime = (fromDate != null) ? fromDate.atStartOfDay() : null;
+        LocalDateTime toDateTime = (toDate != null) ? toDate.atTime(23, 59, 59) : null;
+
+        if (fromDateTime != null && toDateTime != null) {
+            // Filter by both fromDate and toDate
+            orders = orderService.findByOrderDateBetween(fromDateTime, toDateTime, pageable);
+        } else if (status != null && fromDateTime != null) {
+            // Filter by status and fromDate
+            orders = orderService.findByStatusAndOrderDateAfter(status, fromDateTime, pageable);
+        } else if (fromDateTime != null) {
+            // Filter by fromDate only
+            orders = orderService.findByOrderDateAfter(fromDateTime, pageable);
+        } else {
+            // No filters applied, return all orders
+            orders = orderService.findAll(pageable);
+        }
+
+        model.addAttribute("orders", orders.getContent());
+        model.addAttribute("currentPage", orders.getNumber());
+        model.addAttribute("totalPages", orders.getTotalPages());
+        model.addAttribute("status", status);
+        model.addAttribute("fromDate", fromDate);
+        model.addAttribute("toDate", toDate);
+
         return "admin/orders";
     }
 

@@ -3,8 +3,11 @@ package com.example.ecommerceplatform.service;
 import com.example.ecommerceplatform.model.Order;
 import com.example.ecommerceplatform.repository.IOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -45,4 +48,36 @@ public class OrderService implements IOrderService {
     public List<Order> findRecentOrders(int limit) {
         return orderRepository.findTop5ByOrderByOrderDateDesc();
     }
+
+    @Override
+    public Page<Order> findAll(Pageable pageable) {
+        return orderRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Order> findByOrderDateBetween(LocalDateTime fromDate, LocalDateTime toDate, Pageable pageable) {
+        return orderRepository.findByOrderDateBetween(fromDate, toDate, pageable);
+    }
+
+    @Override
+    public Page<Order> findByStatus(String status, Pageable pageable) {
+        return orderRepository.findByStatus(status, pageable);
+    }
+
+    @Override
+    public Page<Order> findByOrderDateAfter(LocalDateTime fromDate, Pageable pageable) {
+        return orderRepository.findByOrderDateAfter(fromDate, pageable);
+    }
+
+    @Override
+    public Page<Order> findByStatusAndOrderDateAfter(String status, LocalDateTime fromDate, Pageable pageable) {
+        return orderRepository.findByStatusAndOrderDateAfter(status, fromDate, pageable);
+    }
+
+    @Override
+    public Page<Order> findByStatusAndOrderDateBetween(String status, LocalDateTime fromDate, LocalDateTime toDate, Pageable pageable) {
+        return orderRepository.findByStatusAndOrderDateBetween(status, fromDate, toDate, pageable);
+    }
+
+
 }
