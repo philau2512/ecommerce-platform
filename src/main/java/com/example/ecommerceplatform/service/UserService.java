@@ -63,4 +63,19 @@ public class UserService implements IUserService {
         return roleRepository.findByName(roleName)
                 .orElseThrow(() -> new RuntimeException("Role not found: " + roleName));
     }
+
+    @Override
+    public List<User> findAllByRoleName(String roleName) {
+        return userRepository.findAllByRoleName(roleName);
+    }
+
+    @Override
+    public List<User> findAllByFullNameContainingIgnoreCase(String keyword) {
+        return userRepository.findAllByFullNameContainingIgnoreCase(keyword);
+    }
+
+    @Override
+    public List<User> findAllByFullNameContainingIgnoreCaseAndRoleName(String keyword, String roleName) {
+        return userRepository.findAllByFullNameContainingIgnoreCaseAndRoleName(keyword, roleName);
+    }
 }

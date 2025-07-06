@@ -230,8 +230,18 @@ public class AdminController {
 
     // QUẢN LÝ KHÁCH HÀNG
     @GetMapping("/users")
-    public String listUsers(Model model) {
-        List<User> users = userService.findAllCustomers();
+    public String listUsers(@RequestParam(required = false) String keyword,
+                            @RequestParam(required = false) String role, Model model) {
+        List<User> users;
+        if (keyword != null && role != null) {
+            users = userService.findAllByFullNameContainingIgnoreCaseAndRoleName(keyword, role);
+        } else if (keyword != null) {
+            users = userService.findAllByFullNameContainingIgnoreCase(keyword);
+        } else if (role != null) {
+            users = userService.findAllByRoleName(role);
+        } else {
+            users = userService.findAllCustomers();
+        }
         model.addAttribute("users", users);
         return "admin/users";
     }
@@ -240,5 +250,12 @@ public class AdminController {
     public String deleteUser(@PathVariable Long id) {
         userService.deleteById(id);
         return "redirect:/admin/users";
+    }
+
+    @GetMapping("view/users/{id}")
+    public String viewUser(@PathVariable Long id, Model model) {
+        User user = userService.findById(id);
+        model.addAttribute("user", user);
+        return "user/profile";
     }
 }

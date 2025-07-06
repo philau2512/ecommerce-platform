@@ -17,4 +17,8 @@ public interface IUserService {
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
     Role findRoleByName(String roleName);
+
+    List<User> findAllByRoleName(String roleName);
+    List<User> findAllByFullNameContainingIgnoreCase(String keyword);
+    List<User> findAllByFullNameContainingIgnoreCaseAndRoleName(String keyword, String roleName);
 }
