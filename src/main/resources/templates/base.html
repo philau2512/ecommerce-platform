@@ -33,6 +33,10 @@
                     <li class="nav-item" th:if="${session.user != null}">
                         <a class="nav-link" th:href="@{/logout}">Đăng xuất</a>
                     </li>
+                    <!-- Trong phần menu, thêm mục này sau những mục khác -->
+                    <li class="nav-item" th:if="${session.user != null && session.user.role.name == 'ADMIN'}">
+                        <a class="nav-link" th:href="@{/admin/dashboard}">Quản trị</a>
+                    </li>
                 </ul>
             </div>
         </div>

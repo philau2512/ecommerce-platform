@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="admin/base-admin :: html(
+          title=~{::title},
+          styles=~{::styles},
+          content=~{::#content},
+          scripts=~{::scripts},
+          activeTab='users'
+      )">
+<head>
+    <title>Quản lý người dùng</title>
+    <styles>
+        <!-- Additional styles specific to this page -->
+    </styles>
+</head>
+<body>
+<div id="content">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Quản lý người dùng</h1>
+    </div>
+
+    <!-- Alert Messages -->
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        <span th:text="${successMessage}">Thao tác thành công!</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <span th:text="${errorMessage}">Đã có lỗi xảy ra!</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <!-- Search -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form th:action="@{/admin/users}" method="get" class="row g-3">
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <input type="text" name="keyword" class="form-control" placeholder="Tìm theo tên, email hoặc số điện thoại..." th:value="${param.keyword}">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="bi bi-search me-1"></i> Tìm kiếm
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <select name="role" class="form-select" onchange="this.form.submit()">
+                        <option value="">-- Tất cả vai trò --</option>
+                        <option value="USER" th:selected="${param.role != null && param.role[0] == 'USER'}">Khách hàng</option>
+                        <option value="ADMIN" th:selected="${param.role != null && param.role[0] == 'ADMIN'}">Quản trị viên</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Users Table -->
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Họ tên</th>
+                        <th>Email</th>
+                        <th>Số điện thoại</th>
+                        <th>Vai trò</th>
+                        <th>Ngày đăng ký</th>
+                        <th>Trạng thái</th>
+                        <th>Hành động</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="user : ${users}">
+                        <td th:text="${user.id}">1</td>
+                        <td th:text="${user.fullName}">Nguyễn Văn A</td>
+                        <td th:text="${user.email}">nguyenvana@example.com</td>
+                        <td th:text="${user.phoneNumber}">0912345678</td>
+                        <td>
+                                    <span th:class="${user.role.name == 'ADMIN' ? 'badge bg-danger' : 'badge bg-info'}"
+                                          th:text="${user.role.name == 'ADMIN' ? 'Quản trị viên' : 'Khách hàng'}">User</span>
+                        </td>
+                        <td th:text="${#temporals.format(user.createdAt, 'dd/MM/yyyy')}">01/01/2023</td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-gear"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" th:href="@{'/admin/view/users/' + ${user.id}}">
+                                            <i class="bi bi-eye me-1"></i> Chi tiết
+                                        </a>
+                                    </li>
+                                    <li th:if="${user.role.name != 'ADMIN'}">
+                                        <a class="dropdown-item text-danger" th:href="@{'/admin/users/delete/' + ${user.id}}"
+                                           onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng này? Hành động này không thể hoàn tác!')">
+                                            <i class="bi bi-trash me-1"></i> Xóa
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(users)}">
+                        <td colspan="8" class="text-center py-3">Không tìm thấy người dùng nào</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div th:if="${totalPages > 1}" class="mt-4">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" th:classappend="${currentPage == 0 ? 'disabled' : ''}">
+                            <a class="page-link" th:href="@{/admin/users(page=${currentPage - 1}, keyword=${param.keyword}, role=${param.role})}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                            th:class="${currentPage == i ? 'page-item active' : 'page-item'}">
+                            <a class="page-link" th:href="@{/admin/users(page=${i}, keyword=${param.keyword}, role=${param.role})}" th:text="${i + 1}"></a>
+                        </li>
+                        <li class="page-item" th:classappend="${currentPage == totalPages - 1 ? 'disabled' : ''}">
+                            <a class="page-link" th:href="@{/admin/users(page=${currentPage + 1}, keyword=${param.keyword}, role=${param.role})}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<scripts>
+    <!-- Additional scripts specific to this page -->
+</scripts>
+</body>
+</html>

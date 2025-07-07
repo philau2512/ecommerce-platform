@@ -1,4 +1,4 @@
 package com.example.ecommerceplatform.service;
 
-public interface ICartService {
+public interface IAuthService {
 }
