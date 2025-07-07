@@ -6,9 +6,12 @@ import com.example.ecommerceplatform.model.OrderItem;
 import com.example.ecommerceplatform.model.User;
 import com.example.ecommerceplatform.repository.ICartItemRepository;
 import com.example.ecommerceplatform.repository.IOrderRepository;
+<<<<<<< HEAD
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+=======
+>>>>>>> da325723564dcfadb2057ff812bf64c7e7f134b4
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -18,9 +21,13 @@ import java.util.List;
 @Service
 public class OrderService implements IOrderService {
 
+<<<<<<< HEAD
     @Autowired
     private IOrderRepository orderRepository;
 
+=======
+    private final IOrderRepository orderRepository;
+>>>>>>> da325723564dcfadb2057ff812bf64c7e7f134b4
     private final ICartItemRepository cartItemRepository;
 
     public OrderService(IOrderRepository orderRepository, ICartItemRepository cartItemRepository) {
@@ -29,6 +36,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
+<<<<<<< HEAD
     public List<Order> findAll() {
         return orderRepository.findAll();
     }
@@ -92,6 +100,8 @@ public class OrderService implements IOrderService {
     }
 
     @Override
+=======
+>>>>>>> da325723564dcfadb2057ff812bf64c7e7f134b4
     public Order placeOrder(User user) {
         List<CartItem> cartItems = cartItemRepository.findByUser(user);
         if (cartItems.isEmpty()) {
@@ -125,5 +135,9 @@ public class OrderService implements IOrderService {
     public List<Order> getOrdersByUser(User user) {
         return orderRepository.findByUser(user);
     }
+<<<<<<< HEAD
 
 }
+=======
+}
+>>>>>>> da325723564dcfadb2057ff812bf64c7e7f134b4
