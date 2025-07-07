@@ -70,7 +70,7 @@
 
                         <!-- Action Buttons -->
                         <div class="d-flex justify-content-between">
-                            <a th:href="@{/products/{id}(id=${product.id})}" class="btn btn-primary btn-sm">
+                            <a th:href="@{/product/{id}(id=${product.id})}" class="btn btn-primary btn-sm">
                                 Xem chi tiết
                             </a>
                             <form th:action="@{/cart/add}" method="post" class="d-inline">

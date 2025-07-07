@@ -1,5 +1,4 @@
 package com.example.ecommerceplatform.controller;
-
 import com.example.ecommerceplatform.model.Product;
 import com.example.ecommerceplatform.repository.IProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,15 +10,14 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/")
 public class HomeController {
-
     @Autowired
     private IProductRepository productRepository;
 
@@ -32,15 +30,21 @@ public class HomeController {
         } else {
             products = productRepository.findAll(PageRequest.of(page, 8));
         }
-
         model.addAttribute("products", products);
         return "home";
     }
 
-    @RequestMapping("/products/{id}")
+    @RequestMapping("/product/{id}")
     public String productDetail(@PathVariable Long id, Model model) {
-        Product product = productRepository.findById(id).orElse(null);
-        model.addAttribute("product", product);
-        return "product/detail";
+        Optional<Product> productOpt = productRepository.findById(id);
+
+        if (productOpt.isPresent()) {
+            model.addAttribute("product", productOpt.get());
+            return "product/detail";
+        } else {
+            // Product not found - redirect to home page or show error
+            model.addAttribute("error", "Sản phẩm không tồn tại!");
+            return "redirect:/"; // or return "error/404";
+        }
     }
 }
