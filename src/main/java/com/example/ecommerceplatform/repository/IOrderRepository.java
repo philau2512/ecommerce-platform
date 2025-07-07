@@ -1,6 +1,7 @@
 package com.example.ecommerceplatform.repository;
 
 import com.example.ecommerceplatform.model.Order;
+import com.example.ecommerceplatform.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Repository
 public interface IOrderRepository extends JpaRepository<Order, Long> {
+    List<Order> findByUser(User user);
     List<Order> findByUserId(Long userId);
 
     // Phương thức để lấy đơn hàng gần đây

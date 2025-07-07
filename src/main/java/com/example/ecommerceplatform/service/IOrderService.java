@@ -1,6 +1,7 @@
 package com.example.ecommerceplatform.service;
 
 import com.example.ecommerceplatform.model.Order;
+import com.example.ecommerceplatform.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -8,6 +9,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface IOrderService {
+    Order placeOrder(User user);
+    List<Order> getOrdersByUser(User user);
     List<Order> findAll();
 
     Order findById(Long id);
