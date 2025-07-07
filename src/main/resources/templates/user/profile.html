@@ -101,7 +101,7 @@
                             <h5 class="card-title">Đơn hàng gần đây</h5>
                             <div class="text-center my-4" th:if="${#lists.isEmpty(user.orders)}">
                                 <p>Chưa có đơn hàng nào</p>
-                                <a th:href="@{/products}" class="btn btn-sm btn-primary">Mua sắm ngay</a>
+                                <a th:href="@{/}" class="btn btn-sm btn-primary">Mua sắm ngay</a>
                             </div>
                             <div th:if="${not #lists.isEmpty(user.orders)}">
                                 <div class="list-group">

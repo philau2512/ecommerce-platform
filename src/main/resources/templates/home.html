@@ -10,8 +10,107 @@
 <div th:insert="base :: site-header"></div>
 
 <main class="container mt-4">
-    <h2>Chào mừng đến với E-Commerce!</h2>
-    <p>Đây là nội dung chính của trang chủ.</p>
+    <div class="row mb-4">
+        <div class="col-md-6 mx-auto">
+            <form th:action="@{/}" method="get" class="d-flex">
+                <input type="text" name="search" class="form-control me-2" placeholder="Tìm kiếm sản phẩm..." th:value="${searchKeyword}" autocomplete="off">
+                <button class="btn btn-primary" type="submit">
+                    <i class="fas fa-search"></i> Tìm kiếm
+                </button>
+            </form>
+        </div>
+    </div>
+    <div th:if="${searchKeyword != null}" class="row mb-3">
+        <div class="col-12">
+            <div class="alert alert-info d-flex justify-content-between align-items-center">
+                <span>
+                    <i class="fas fa-search me-2"></i>
+                    Kết quả tìm kiếm cho: <strong th:text="${searchKeyword}"></strong>
+                    (<span th:text="${products.totalElements}">0</span> sản phẩm)
+                </span>
+                <a th:href="@{/}" class="btn btn-sm btn-outline-secondary">
+                    <i class="fas fa-times"></i> Xóa bộ lọc
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <h2 th:text="${searchKeyword != null ? 'Kết quả tìm kiếm' : 'Sản phẩm'}">Products</h2>
+    <div class="row">
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4" th:each="product : ${products}">
+            <div class="card h-100">
+                <img th:src="${product.imageUrl != null ? product.imageUrl : 'https://via.placeholder.com/300x200'}"
+                     class="card-img-top"
+                     th:alt="${product.name}"
+                     style="height: 200px; object-fit: cover;">
+
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title" th:text="${product.name}">Tên sản phẩm</h5>
+                    <p class="card-text flex-grow-1" th:text="${product.description}">Mô tả sản phẩm</p>
+                    <small class="text-muted mb-2" th:if="${product.category != null}">
+                        <i class="fas fa-tag"></i> <span th:text="${product.category.name}">Danh mục</span>
+                    </small>
+
+<!--                    Product's status-->
+                    <div class="mb-2">
+                        <span th:if="${product.quantity > 0}" class="badge bg-success">Còn hàng</span>
+                        <span th:if="${product.quantity == 0}" class="badge bg-danger">Hết hàng</span>
+                        <small class="text-muted ms-2" th:if="${product.quantity > 0}">
+                            (<span th:text="${product.quantity}">0</span> sản phẩm)
+                        </small>
+                    </div>
+
+                    <div class="mt-auto">
+                        <!-- Product Price -->
+                        <p class="card-text">
+                            <strong class="text-primary" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">
+                                0 VNĐ
+                            </strong>
+                        </p>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex justify-content-between">
+                            <a th:href="@{/product/{id}(id=${product.id})}" class="btn btn-primary btn-sm">
+                                Xem chi tiết
+                            </a>
+                            <form th:action="@{/cart/add}" method="post" class="d-inline">
+                                <input type="hidden" name="productId" th:value="${product.id}">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit"
+                                        class="btn btn-success btn-sm"
+                                        th:disabled="${product.quantity == 0}">
+                                    <i class="fas fa-cart-plus"></i> Thêm vào giỏ
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div th:if="${products == null or products.isEmpty()}" class="text-center py-5">
+        <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+        <h4 class="text-muted">Không có sản phẩm nào</h4>
+        <p class="text-muted">Hiện tại chưa có sản phẩm nào trong danh mục này.</p>
+    </div>
+
+    <div th:if="${products.hasContent()}" class="text-center mt-4">
+    <span th:if="${products.hasPrevious()}">
+        <a th:href="@{/(page=${products.number - 1})}" class="btn btn-outline-primary btn-sm me-2">
+            <i class="fas fa-chevron-left"></i> Trước
+        </a>
+    </span>
+        <span class="mx-3">
+        Trang <span th:text="${products.number + 1}">1</span> / <span th:text="${products.totalPages}">1</span>
+    </span>
+        <span th:if="${products.hasNext()}">
+        <a th:href="@{/(page=${products.number + 1})}" class="btn btn-outline-primary btn-sm ms-2">
+            Tiếp <i class="fas fa-chevron-right"></i>
+        </a>
+    </span>
+    </div>
 </main>
 
 <!-- ✅ Footer từ base -->

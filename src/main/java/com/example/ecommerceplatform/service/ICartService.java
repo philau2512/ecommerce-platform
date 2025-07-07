@@ -16,8 +16,5 @@ public interface ICartService {
     void updateCartItemQuantity(User user, Long cartItemId, int quantity);
 
     BigDecimal calculateTotalAmount(List<CartItem> cartItems);
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> da325723564dcfadb2057ff812bf64c7e7f134b4
+
