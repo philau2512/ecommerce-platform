@@ -34,14 +34,22 @@
             <tbody>
             <tr th:each="item : ${cartItems}">
                 <td>
-                    <img th:src="${item.product.imageUrl}" alt="Ảnh sản phẩm" class="img-thumbnail" style="width: 80px;"/>
+                    <img th:src="${item.product.imageUrl}" alt="Ảnh sản phẩm" class="img-thumbnail"
+                         style="width: 80px;"/>
                 </td>
                 <td th:text="${item.product.name}"></td>
                 <td th:text="${#numbers.formatDecimal(item.product.price,1,'POINT',0,'COMMA')} + ' đ'"></td>
-                <td th:text="${item.quantity}"></td>
+                <td>
+                    <form th:action="@{/cart/update}" method="post" class="d-flex">
+                        <input type="hidden" name="cartItemId" th:value="${item.id}"/>
+                        <input type="number" name="quantity" min="1" th:value="${item.quantity}"
+                               class="form-control form-control-sm me-2" style="width:80px;"/>
+                        <button type="submit" class="btn btn-sm btn-primary">Cập nhật</button>
+                    </form>
+                </td>
                 <td th:text="${#numbers.formatDecimal(item.totalPrice,1,'POINT',0,'COMMA')} + ' đ'"></td>
                 <td>
-                    <form th:action="@{/cart/remove}" method="post" class="d-inline">
+                    <form th:action="@{/cart/remove}" method="post">
                         <input type="hidden" name="cartItemId" th:value="${item.id}"/>
                         <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
                     </form>
