@@ -69,5 +69,4 @@ public class CartController {
         cartService.updateCartItemQuantity(user, cartItemId, quantity);
         return "redirect:/cart";
     }
-
 }
