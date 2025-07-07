@@ -1,8 +1,5 @@
 package com.example.ecommerceplatform.controller;
 
-<<<<<<< HEAD
-public class OrderController {
-=======
 import com.example.ecommerceplatform.model.Order;
 import com.example.ecommerceplatform.model.User;
 import com.example.ecommerceplatform.service.IOrderService;
@@ -58,5 +55,4 @@ public class OrderController {
         model.addAttribute("orders", orders);
         return "order/list";
     }
->>>>>>> da325723564dcfadb2057ff812bf64c7e7f134b4
 }

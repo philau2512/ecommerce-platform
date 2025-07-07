@@ -2,20 +2,15 @@ package com.example.ecommerceplatform.service;
 
 import com.example.ecommerceplatform.model.Order;
 import com.example.ecommerceplatform.model.User;
-<<<<<<< HEAD
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
-=======
-
->>>>>>> da325723564dcfadb2057ff812bf64c7e7f134b4
 import java.util.List;
 
 public interface IOrderService {
     Order placeOrder(User user);
     List<Order> getOrdersByUser(User user);
-<<<<<<< HEAD
     List<Order> findAll();
 
     Order findById(Long id);
@@ -42,6 +37,4 @@ public interface IOrderService {
     Page<Order> findByStatusAndOrderDateBetween(String status, LocalDateTime fromDate, LocalDateTime toDate, Pageable pageable);
 
 }
-=======
-}
->>>>>>> da325723564dcfadb2057ff812bf64c7e7f134b4
+
