@@ -22,9 +22,7 @@ public class CartController {
     }
 
     @PostMapping("/cart/add")
-    public String addToCart(
-            @RequestParam("productId") Long productId,
-            @RequestParam("quantity") int quantity) {
+    public String addToCart(@RequestParam("productId") Long productId, @RequestParam("quantity") int quantity) {
 
         User user = new User();
         user.setId(1L);
@@ -59,9 +57,7 @@ public class CartController {
     }
 
     @PostMapping("/cart/update")
-    public String updateCartItemQuantity(
-            @RequestParam("cartItemId") Long cartItemId,
-            @RequestParam("quantity") int quantity) {
+    public String updateCartItemQuantity(@RequestParam("cartItemId") Long cartItemId, @RequestParam("quantity") int quantity) {
 
         User user = new User();
         user.setId(1L);
