@@ -1,10 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Danh sách đơn hàng</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
 </head>
 <body>
+<div class="container">
+    <h2>Danh sách đơn hàng</h2>
 
+    <!-- Thông báo khi danh sách rỗng -->
+    <div th:if="${orders.isEmpty()}" class="alert alert-info text-center">
+        Không có đơn hàng nào.
+        <a th:href="@{/}" class="btn btn-primary">Quay lại trang chủ</a>
+    </div>
+
+    <!-- Bảng hiển thị danh sách đơn hàng -->
+    <div th:if="${!orders.isEmpty()}">
+        <table class="table table-bordered">
+            <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Khách hàng</th>
+                <th>Ngày đặt</th>
+                <th>Trạng thái</th>
+                <th>Tổng tiền</th>
+                <th>Địa chỉ giao</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="order : ${orders}">
+                <td th:text="${order.id}"></td>
+                <td th:text="${order.user.username}"></td>
+                <td th:text="${order.orderDate}"></td>
+                <td th:text="${order.status}"></td>
+                <td th:text="${order.totalPrice}"></td>
+                <td th:text="${order.shippingAddress}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="mt-3">
+            <p>Tổng số đơn hàng: <span th:text="${orders.size()}"></span></p>
+        </div>
+
+        <div class="text-end">
+            <a th:href="@{/}" class="btn btn-secondary">Quay lại trang chủ</a>
+            <a th:href="@{/admin/dashboard}" class="btn btn-success">Quản lý thêm</a>
+        </div>
+    </div>
+</div>
 </body>
 </html>
