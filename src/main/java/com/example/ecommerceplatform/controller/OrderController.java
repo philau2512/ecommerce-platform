@@ -55,4 +55,26 @@ public class OrderController {
         model.addAttribute("orders", orders);
         return "order/list";
     }
+
+    @GetMapping("/order/checkout")
+    public String checkout(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            user = new User();
+            user.setId(1L);
+            user.setUsername("Test User");
+            session.setAttribute("user", user);
+        }
+
+        double totalAmount = 0.0;
+        Object totalAmountObj = session.getAttribute("totalAmount");
+        if (totalAmountObj != null) {
+            totalAmount = (Double) totalAmountObj;
+        }
+        model.addAttribute("totalAmount", totalAmount);
+
+        model.addAttribute("user", user);
+        return "order/checkout";
+    }
+
 }
