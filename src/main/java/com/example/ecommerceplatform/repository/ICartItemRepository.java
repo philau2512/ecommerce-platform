@@ -13,4 +13,3 @@ public interface ICartItemRepository extends JpaRepository<CartItem, Long> {
 
     List<CartItem> findByUser(User user);
 }
-
