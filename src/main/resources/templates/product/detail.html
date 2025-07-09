@@ -123,8 +123,8 @@
 
                         <!-- Quantity Selector and Add to Cart -->
                         <div class="mb-4" th:if="${product.quantity > 0}">
-                            <form th:action="@{/cart/add}" method="post" class="d-flex align-items-center">
-                                <input type="hidden" name="productId" th:value="${product.id}">
+                            <form th:action="@{/user/cart/add}" method="post" class="d-flex align-items-center">
+                            <input type="hidden" name="productId" th:value="${product.id}">
 
                                 <div class="me-3">
                                     <label for="quantity" class="form-label mb-2">Số lượng:</label>

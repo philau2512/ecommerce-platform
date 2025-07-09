@@ -21,10 +21,11 @@
         <tbody>
         <tr th:each="order : ${orders}">
             <td th:text="${order.id}">1</td>
-            <td th:text="${#dates.format(order.orderDate, 'dd/MM/yyyy HH:mm')}">01/07/2025 12:00</td>
+            <td th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm')}">01/07/2025 12:00</td>
             <td th:text="${order.status}">Đang xử lý</td>
             <td th:text="${order.orderItems.size()}">3</td>
         </tr>
+
         <tr th:if="${#lists.isEmpty(orders)}">
             <td colspan="4" class="text-center">Bạn chưa có đơn hàng nào.</td>
         </tr>

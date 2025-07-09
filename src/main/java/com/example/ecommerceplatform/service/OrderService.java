@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -97,9 +98,11 @@ public class OrderService implements IOrderService {
         Order order = new Order();
         order.setUser(user);
         order.setOrderDate(LocalDateTime.now());
-        order.setStatus("Đang xử lý");
+        order.setStatus("PENDING");
 
         List<OrderItem> orderItems = new ArrayList<>();
+        double totalAmount = 0.0;
+
         for (CartItem cartItem : cartItems) {
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
@@ -107,8 +110,12 @@ public class OrderService implements IOrderService {
             orderItem.setQuantity(cartItem.getQuantity());
             orderItem.setUnitPrice(cartItem.getProduct().getPrice());
             orderItems.add(orderItem);
+
+            totalAmount += cartItem.getProduct().getPrice().doubleValue() * cartItem.getQuantity();
         }
+
         order.setOrderItems(orderItems);
+        order.setTotalPrice(BigDecimal.valueOf(totalAmount)); // ✅ Gán tổng tiền tại đây
 
         Order savedOrder = orderRepository.save(order);
 
@@ -116,6 +123,7 @@ public class OrderService implements IOrderService {
 
         return savedOrder;
     }
+
 
     @Override
     public List<Order> getOrdersByUser(User user) {

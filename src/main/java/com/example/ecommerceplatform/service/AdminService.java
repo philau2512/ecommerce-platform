@@ -168,7 +168,8 @@ public class AdminService implements IAdminService {
             if (order.getOrderDate() != null && order.getOrderDate().getYear() == year) {
                 String monthName = order.getOrderDate().getMonth().toString();
                 BigDecimal currentRevenue = revenueMap.get(monthName);
-                revenueMap.put(monthName, currentRevenue.add(order.getTotalPrice()));
+                BigDecimal orderPrice = order.getTotalPrice() != null ? order.getTotalPrice() : BigDecimal.ZERO;
+                revenueMap.put(monthName, currentRevenue.add(orderPrice));
             }
         }
 

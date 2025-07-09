@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Controller
+@RequestMapping("/user")
 public class CartController {
 
     @Autowired
@@ -33,7 +34,7 @@ public class CartController {
 
         User user = getCurrentUser();
         cartService.addProductToCart(user, productId, quantity);
-        return "redirect:/cart";
+        return "redirect:/user/cart";
     }
 
     @GetMapping("/cart")
@@ -52,7 +53,7 @@ public class CartController {
     public String removeFromCart(@RequestParam("cartItemId") Long cartItemId) {
         User user = getCurrentUser();
         cartService.removeCartItem(user, cartItemId);
-        return "redirect:/cart";
+        return "redirect:/user/cart";
     }
 
     @PostMapping("/cart/update")
@@ -61,6 +62,6 @@ public class CartController {
 
         User user = getCurrentUser();
         cartService.updateCartItemQuantity(user, cartItemId, quantity);
-        return "redirect:/cart";
+        return "redirect:/user/cart";
     }
 }

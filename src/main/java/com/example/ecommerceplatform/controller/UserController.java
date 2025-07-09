@@ -18,19 +18,11 @@ public class UserController {
     private IUserService userService;
 
     @GetMapping("/profile")
-    public String viewProfile(HttpSession session, Model model, RedirectAttributes redirectAttributes) {
-        // Lấy thông tin user từ session
-        User sessionUser = (User) session.getAttribute("user");
-
-        if (sessionUser == null) {
-            redirectAttributes.addFlashAttribute("error", "Bạn cần đăng nhập để xem trang này");
-            return "redirect:/login";
-        }
-
-        // Lấy thông tin đầy đủ từ database (để đảm bảo thông tin mới nhất)
-        User user = userService.findById(sessionUser.getId());
+    public String viewProfile(Model model, java.security.Principal principal) {
+        String username = principal.getName(); // ✅ Lấy username từ Spring Security
+        User user = userService.findByUsername(username); // ✅ Tìm trong DB
         model.addAttribute("user", user);
-
         return "user/profile";
     }
+
 }

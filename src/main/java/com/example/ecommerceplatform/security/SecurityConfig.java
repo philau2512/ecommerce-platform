@@ -28,15 +28,35 @@ public class SecurityConfig {
                                 "/css/**", "/js/**", "/images/**"
                         ).permitAll()
 
+                        .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN") // ✅ thêm dòng này
                         .requestMatchers("/cart/**", "/order/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/", true)
                         .permitAll()
+                        .successHandler((request, response, authentication) -> {
+                            // Lấy role của user sau khi đăng nhập
+                            var authorities = authentication.getAuthorities();
+
+                            for (var authority : authorities) {
+                                String role = authority.getAuthority();
+
+                                if (role.equals("ROLE_ADMIN")) {
+                                    response.sendRedirect("/admin/dashboard");
+                                    return;
+                                } else if (role.equals("ROLE_USER")) {
+                                    response.sendRedirect("/products");
+                                    return;
+                                }
+                            }
+
+                            // Nếu không có role phù hợp thì quay lại trang login
+                            response.sendRedirect("/login?error");
+                        })
                 )
+
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login?logout")
                         .permitAll()

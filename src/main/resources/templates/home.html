@@ -73,7 +73,7 @@
                             <a th:href="@{/product/{id}(id=${product.id})}" class="btn btn-primary btn-sm">
                                 Xem chi tiết
                             </a>
-                            <form th:action="@{/cart/add}" method="post" class="d-inline">
+                            <form th:action="@{/user/cart/add}" method="post" class="d-inline">
                                 <input type="hidden" name="productId" th:value="${product.id}">
                                 <input type="hidden" name="quantity" value="1">
                                 <button type="submit"
